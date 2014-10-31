@@ -11,52 +11,85 @@ using namespace std;
  * sinon retourne le code ASCII de la touche */
 int read_keybord();
 
-/******************************************************************************/
-#define H 20
-#define L 30
+/***************************************************************************/
+#define H  20
+#define L  50
 
 char screen[H][L];
 
 void screen_display() {
   system("clear");
   for (int i=0; i<H; i++) {
-    for (int j=0; j<L; j++) {
+    for (int j=0; j<L; j++)
       cout << screen[i][j];
-    }
     cout << endl;
   }
 }
 
-void clear_screen() {
-  for (int i=0; i<H; i++)
-    for (int j=0; j<L; j++)
-      screen[i][j] = ' ';
+void display() {
+  for (int i=0; i<H; i++){
+    for (int j=0; j<L; j++){
+      if (i==0 || i==H-1 || j==0 || j==L-1)
+	screen[i][j] = '*';
+      else
+	screen[i][j] = ' ';
+    }
+    cout << endl;
+  }
 }
-
 /******************************************************************************/
-double x = 0.0;
-double y = 0.0;
+double x = H-2;
+double y = L/2;
+bool movex=true; 
+bool movey=true;
 
 void update_game(int key) {
-  screen[(int)x][(int)y] = 'X';
-  x = x + 0.2;
-  y = y + 0.05;
+  screen[(int)x][(int)y] = 'o';
+  if (movex){
+    x--; 
+    if (x == 0)
+      movex=false;
+  }
+  
+  if (!movex) {
+    x++;
+    if (x == H-2)
+      movex=true;
+  }
+  
+  if (movey){
+    y++; 
+    if (y == L-2)
+      movey=false;
+  }
+
+  if (!movey) {
+    y--;
+    if (y == 1)
+      movey=true;
+  }  
 }
 
-/******************************************************************************/
+  
 
+
+
+
+/******************************************************************************/
 int main() {
   int key;
   do {
     key = read_keybord();
-    clear_screen();
+    display();
     update_game(key);
     screen_display();
-    usleep(20 * 1000);
-  } while (key != 'q');
+    usleep(100 * 1000);
+  } 
+  while (key != 'q');
 }
 
 /******************************************************************************/
+
 
 int kbhit(void)
 {
@@ -92,7 +125,7 @@ int read_keybord() {
   else
     key = 0;
   return key;
-}
+}                     
 
 /******************************************************************************/
 /******************************************************************************/
